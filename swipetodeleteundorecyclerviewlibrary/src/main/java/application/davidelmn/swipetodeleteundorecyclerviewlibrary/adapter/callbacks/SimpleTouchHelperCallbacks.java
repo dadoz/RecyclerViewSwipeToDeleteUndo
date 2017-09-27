@@ -1,4 +1,4 @@
-package net.nemanjakovacevic.recyclerviewswipetodelete.adapter.callbacks;
+package application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.callbacks;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,40 +6,40 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
-import net.nemanjakovacevic.recyclerviewswipetodelete.R;
-import net.nemanjakovacevic.recyclerviewswipetodelete.adapter.DeletableRvAdapter;
-
 import java.lang.ref.WeakReference;
 
+import application.davidelmn.swipetodeleteundorecyclerviewlibrary.R;
+import application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.DeletableRvAdapter;
 /**
  * Created by davide-syn on 9/27/17.
  */
 
 public class SimpleTouchHelperCallbacks extends ItemTouchHelper.SimpleCallback {
     private final RecyclerView recyclerView;
-    private Drawable background;
     private Drawable xMark;
     private int xMarkMargin;
-    private boolean initiated;
     private WeakReference<Context> context;
 
-    public SimpleTouchHelperCallbacks(Context context, RecyclerView recylerView, int dragDirs, int swipeDirs) {
+    public SimpleTouchHelperCallbacks(@NonNull RecyclerView rv, int dragDirs, int swipeDirs) {
         super(dragDirs, swipeDirs);
-        this.recyclerView = recylerView;
-        this.context = new WeakReference<Context>(context);
+        recyclerView = rv;
+        context = new WeakReference<>(recyclerView.getContext());
+        init();
     }
 
+    /**
+     * init view
+     */
     private void init() {
-        background = new ColorDrawable(Color.RED);
         xMark = ContextCompat.getDrawable(context.get(), R.drawable.ic_clear_24dp);
         xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         xMarkMargin = (int) context.get().getResources().getDimension(R.dimen.ic_clear_margin);
-        initiated = true;
     }
 
     // not important, we don't want drag & drop
@@ -80,11 +80,8 @@ public class SimpleTouchHelperCallbacks extends ItemTouchHelper.SimpleCallback {
             return;
         }
 
-        if (!initiated) {
-            init();
-        }
-
         // draw red background
+        Drawable background = Utils.getBackgroundColorDrawable(context.get());
         background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
         background.draw(c);
 
@@ -104,4 +101,11 @@ public class SimpleTouchHelperCallbacks extends ItemTouchHelper.SimpleCallback {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 
-};
+    public static class Utils {
+        public static Drawable getBackgroundColorDrawable(Context context) {
+            //mv to config - color
+            return new ColorDrawable(ContextCompat.getColor(context, R.color.md_red_400));
+        }
+    }
+
+}

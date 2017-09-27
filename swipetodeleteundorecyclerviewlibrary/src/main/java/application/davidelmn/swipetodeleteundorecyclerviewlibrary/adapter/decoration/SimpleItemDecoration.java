@@ -1,11 +1,11 @@
-package net.nemanjakovacevic.recyclerviewswipetodelete.adapter.decoration;
+package application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.decoration;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.callbacks.SimpleTouchHelperCallbacks;
 
 /**
  * Created by davide-syn on 9/27/17.
@@ -13,22 +13,8 @@ import android.view.View;
 
 public class SimpleItemDecoration extends RecyclerView.ItemDecoration {
 
-    // we want to cache this and not allocate anything repeatedly in the onDraw method
-    Drawable background;
-    boolean initiated;
-
-    private void init() {
-        background = new ColorDrawable(Color.RED);
-        initiated = true;
-    }
-
     @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-
-        if (!initiated) {
-            init();
-        }
-
         // only if animation is in progress
         if (parent.getItemAnimator().isRunning()) {
 
@@ -80,6 +66,7 @@ public class SimpleItemDecoration extends RecyclerView.ItemDecoration {
                 bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
             }
 
+            Drawable background = SimpleTouchHelperCallbacks.Utils.getBackgroundColorDrawable(parent.getContext());
             background.setBounds(left, top, right, bottom);
             background.draw(c);
 

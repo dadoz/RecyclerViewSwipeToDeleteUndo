@@ -1,8 +1,9 @@
 <resources>
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-
+        <item name="colorPrimary">@color/md_green_400</item>
+        <item name="colorPrimaryDark">@color/md_green_600</item>
+        <item name="colorAccent">@color/md_indigo_400</item>
+        <item name="android:textColorPrimary">@color/md_blue_grey_900</item>
     </style>
-
 </resources>

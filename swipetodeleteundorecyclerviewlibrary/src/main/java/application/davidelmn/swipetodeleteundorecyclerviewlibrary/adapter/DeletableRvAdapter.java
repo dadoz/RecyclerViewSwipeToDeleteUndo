@@ -1,4 +1,4 @@
-package net.nemanjakovacevic.recyclerviewswipetodelete.adapter;
+package application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter;
 
 import android.graphics.Color;
 import android.os.Handler;
@@ -9,35 +9,35 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import net.nemanjakovacevic.recyclerviewswipetodelete.R;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import application.davidelmn.swipetodeleteundorecyclerviewlibrary.R;
+
+import static application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.callbacks.SimpleTouchHelperCallbacks.Utils;
 
 /**
  * Created by davide-syn on 9/27/17.
  */
 
-public class DeletableRvAdapter extends RecyclerView.Adapter {
+public abstract class DeletableRvAdapter extends RecyclerView.Adapter {
     private static final int PENDING_REMOVAL_TIMEOUT = 3000; // 3sec
     private List<String> items = new ArrayList<>();
     private List<String> itemsPendingRemoval = new ArrayList<>();
     private int lastInsertedIndex; // so we can add some more items for testing purposes
-    private boolean undoOn; // is undo on, you can turn it on from the toolbar menu
+    private boolean undoOn = true; // is undo on, you can turn it on from the toolbar menu
 
     private Handler handler = new Handler(); // hanlder for running delayed runnables
     private HashMap<String, Runnable> pendingRunnables = new HashMap<>(); // map of items to pending runnables, so we can cancel a removal if need be
 
-    public DeletableRvAdapter(boolean enableUndoOnSwipe) {
+    protected DeletableRvAdapter() {
         // let's generate some items
         lastInsertedIndex = 15;
         // this should give us a couple of screens worth
         for (int i=1; i<= lastInsertedIndex; i++) {
             items.add("Item " + i);
         }
-        //enable undo
-        undoOn = enableUndoOnSwipe;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class DeletableRvAdapter extends RecyclerView.Adapter {
 
         if (itemsPendingRemoval.contains(item)) {
             // we need to show the "undo" state of the row
-            viewHolder.itemView.setBackgroundColor(Color.RED);
+            viewHolder.itemView.setBackground(Utils.getBackgroundColorDrawable(holder.itemView.getContext()));
             viewHolder.titleTextView.setVisibility(View.GONE);
             viewHolder.undoButton.setVisibility(View.VISIBLE);
             viewHolder.undoButton.setOnClickListener(new View.OnClickListener() {
