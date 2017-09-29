@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.callbacks.SimpleTouchHelperCallbacks;
+import application.davidelmn.swipetodeleteundorecyclerviewlibrary.utils.ColorUtils;
 
 /**
  * Created by davide-syn on 9/27/17.
@@ -66,7 +66,7 @@ public class SimpleItemDecoration extends RecyclerView.ItemDecoration {
                 bottom = firstViewComingUp.getTop() + (int) firstViewComingUp.getTranslationY();
             }
 
-            Drawable background = SimpleTouchHelperCallbacks.Utils.getBackgroundColorDrawable(parent.getContext());
+            Drawable background = ColorUtils.getBackgroundColorDrawable(parent.getContext());
             background.setBounds(left, top, right, bottom);
             background.draw(c);
 

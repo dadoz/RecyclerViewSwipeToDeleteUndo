@@ -1,5 +1,6 @@
 package net.nemanjakovacevic.recyclerviewswipetodelete.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,8 @@ import application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.Deleta
  */
 
 public class SampleAdapter<T> extends DeletableRvAdapter<SampleAdapter.SampleViewHolder, T> {
-    public SampleAdapter(List<T> items) {
-        super(items);
+    public SampleAdapter(List<T> items, Context context) {
+        super(items, context);
     }
 
     @Override

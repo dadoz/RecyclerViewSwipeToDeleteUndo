@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private void initRecyclerView() {
         SwipeDeleteRecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new SampleAdapter<>(retrieveDataStore()));
+        recyclerView.setAdapter(new SampleAdapter<>(retrieveDataStore(), this));
         recyclerView.setHasFixedSize(true);
     }
 

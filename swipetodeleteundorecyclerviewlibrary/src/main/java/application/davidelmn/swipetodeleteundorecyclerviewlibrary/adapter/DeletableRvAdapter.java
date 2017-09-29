@@ -1,19 +1,18 @@
 package application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import application.davidelmn.swipetodeleteundorecyclerviewlibrary.R;
-
-import static application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.callbacks.SimpleTouchHelperCallbacks.Utils;
+import application.davidelmn.swipetodeleteundorecyclerviewlibrary.utils.ColorUtils;
 
 /**
  * Created by davide-syn on 9/27/17.
@@ -22,9 +21,18 @@ public abstract class DeletableRvAdapter<VH extends DeletableVh, T> extends Recy
     private static final int PENDING_REMOVAL_TIMEOUT = 3000; // 3sec TODO move to config
     private HashMap<T, Subscription> pengingSubscriptions = new HashMap<>(); // map of items to pending runnables, so we can cancel a removal if need be
     private List<T> items = new ArrayList<>(); //items
+    private Drawable redColor;
+    private Drawable whiteColor;
 
-    protected DeletableRvAdapter(List<T> items) {
+    /**
+     * constructor
+     * @param items
+     * @param context
+     */
+    protected DeletableRvAdapter(List<T> items, Context context) {
         this.items = items;
+        redColor = ColorUtils.getBackgroundColorDrawable(context);
+        whiteColor = new ColorDrawable(Color.WHITE);
     }
 
     @Override
@@ -33,13 +41,11 @@ public abstract class DeletableRvAdapter<VH extends DeletableVh, T> extends Recy
     @Override
     public void onBindViewHolder(VH viewHolder, int position) {
         T item = items.get(position);
+        boolean isDeletedItemInPending = hasDeleteItemInPending(item);
         //set delete button
-        viewHolder.setUndoButtonEnabled(v -> handleUndoButtonClick(item), hasDeleteItemInPending(item));
-        //set color
-        viewHolder.itemView.setBackground(hasDeleteItemInPending(item) ?
-                Utils.getBackgroundColorDrawable(viewHolder.itemView.getContext()) :
-                new ColorDrawable(Color.WHITE));
-        viewHolder.itemView.findViewById(R.id.mainViewLayoutContainerId).setVisibility(hasDeleteItemInPending(item) ? View.GONE: View.VISIBLE);
+        viewHolder.setUndoButtonEnabled(v -> handleUndoButtonClick(item), isDeletedItemInPending);
+        //set background color
+        viewHolder.itemView.setBackground(isDeletedItemInPending ? redColor : whiteColor);
     }
 
     @Override
