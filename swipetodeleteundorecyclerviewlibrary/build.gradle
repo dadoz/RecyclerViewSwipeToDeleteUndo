@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
 
 android {
     compileSdkVersion 26
@@ -36,4 +38,68 @@ dependencies {
     compile "com.android.support:support-annotations:$appcompat_version"
 
     testCompile 'junit:junit:4.12'
+}
+
+
+group = 'davidelmn.swipetodelete.recyclerview.lib'
+version = '1.0'
+
+
+
+def artifact = new Properties()
+artifact.load(new FileInputStream("deploy.settings"))
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourcesJar
+}
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            packaging 'aar'
+            groupId artifact.groupId
+            artifactId artifact.id
+            version artifact.version
+            name artifact.id // pom.project.name must be same as bintray.pkg.name
+            url artifact.siteUrl
+            inceptionYear '2017'
+            licenses {
+                license {
+                    name 'Apache-2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                connection artifact.gitUrl
+                developerConnection artifact.gitUrl
+                url artifact.siteUrl
+            }
+        }
+    }
+}
+
+bintray {
+    user = artifact.bintrayUser
+    key = artifact.bintrayApiKey
+    configurations = ['archives']
+    pkg {
+        repo = 'swipeToDeleteUndoRecyclerViewLIb'
+        name = 'swipeToDeleteUndoRecyclerView'
+        userOrg = user
+        publish = true
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/dadoz/RecyclerViewSwipeToDeleteUndo'
+        version {
+            name = '1.0.0'
+            desc = 'Description bla bla bla'
+            released  = new Date()
+            vcsTag = '1.0.0'
+            attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+        }
+    }
 }
