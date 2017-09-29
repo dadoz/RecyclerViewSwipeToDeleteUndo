@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.View;
 
 import java.lang.ref.WeakReference;
 
@@ -49,17 +48,17 @@ public class SimpleTouchHelperCallbacks extends ItemTouchHelper.SimpleCallback {
     @Override
     public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         int position = viewHolder.getAdapterPosition();
-        DeletableRvAdapter testAdapter = (DeletableRvAdapter)recyclerView.getAdapter();
+        DeletableRvAdapter deletableRvAdapter = (DeletableRvAdapter)recyclerView.getAdapter();
         //if (testAdapter.isUndoOn() && testAdapter.isPendingRemoval(position)) {
-        return testAdapter.isPendingRemoval(position) ? 0 :
+        return deletableRvAdapter.isPendingRemoval(position) ? 0 :
                 super.getSwipeDirs(recyclerView, viewHolder);
     }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
         int swipedPosition = viewHolder.getAdapterPosition();
-        DeletableRvAdapter adapter = (DeletableRvAdapter) recyclerView.getAdapter();
-        adapter.pendingRemoval(swipedPosition);
+        ((DeletableRvAdapter) recyclerView.getAdapter())
+                .pendingRemoval(swipedPosition);
 //        boolean undoOn = adapter.isUndoOn();
 //        if (undoOn) {
 //            adapter.pendingRemoval(swipedPosition);
@@ -69,32 +68,16 @@ public class SimpleTouchHelperCallbacks extends ItemTouchHelper.SimpleCallback {
     }
 
     @Override
-    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        View itemView = viewHolder.itemView;
-        // not sure why, but this method get's called for viewholder that are already swiped away
+    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                            float dX, float dY, int actionState, boolean isCurrentlyActive) {
         if (viewHolder.getAdapterPosition() == -1) {
-            // not interested in those
             return;
         }
-
         // draw red background
         Drawable background = Utils.getBackgroundColorDrawable(context.get());
-        background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+        background.setBounds(viewHolder.itemView.getRight() + (int) dX, viewHolder.itemView.getTop(),
+                viewHolder.itemView.getRight(), viewHolder.itemView.getBottom());
         background.draw(c);
-
-//        // draw x mark
-//        int itemHeight = itemView.getBottom() - itemView.getTop();
-//        int intrinsicWidth = xMark.getIntrinsicWidth();
-//        int intrinsicHeight = xMark.getIntrinsicWidth();
-//
-//        int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
-//        int xMarkRight = itemView.getRight() - xMarkMargin;
-//        int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight)/2;
-//        int xMarkBottom = xMarkTop + intrinsicHeight;
-//        xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
-//
-//        xMark.draw(c);
-
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 
