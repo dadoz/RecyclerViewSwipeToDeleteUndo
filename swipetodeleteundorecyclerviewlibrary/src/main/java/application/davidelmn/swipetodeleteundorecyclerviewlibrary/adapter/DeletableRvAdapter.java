@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -36,7 +35,7 @@ public abstract class DeletableRvAdapter<VH extends DeletableVh, T> extends Recy
     public void onBindViewHolder(VH viewHolder, int position) {
         T item = items.get(position);
         //set delete button
-        viewHolder.setUndoButtonEnabled(v -> handleUndoButtonClick(viewHolder.itemView, item), hasDeleteItemInPending(item));
+        viewHolder.setUndoButtonEnabled(v -> handleUndoButtonClick(item), hasDeleteItemInPending(item));
         //set color
         viewHolder.itemView.setBackground(hasDeleteItemInPending(item) ?
                 Utils.getBackgroundColorDrawable(viewHolder.itemView.getContext()) :
@@ -56,23 +55,20 @@ public abstract class DeletableRvAdapter<VH extends DeletableVh, T> extends Recy
     public List<T> getItems() { return items; }
 
     /**
-     * @param itemView
      * @param item
      */
-    public void handleUndoButtonClick(View itemView, T item) {
+    public void handleUndoButtonClick(T item) {
         // user wants to undo the removal, let's cancel the pending task
         Subscription subscription = pengingSubscriptions.get(item);
         if (subscription != null) {
-            Log.e(getClass().getName(), "remnove pending runnable");
             subscription.removeCallbacks();
+            //remove item
+            itemsPendingRemoval.remove(item);
+            // this will rebind the row in "normal" state
+            notifyItemChanged(subscription.getPosition());
+            //remove handler
+            pengingSubscriptions.remove(item);
         }
-
-        //remove handler
-        pengingSubscriptions.remove(itemView.getTag());
-        //remove item
-        itemsPendingRemoval.remove(item);
-        // this will rebind the row in "normal" state
-        notifyItemChanged(items.indexOf(item));
     }
 
     /**
@@ -87,7 +83,7 @@ public abstract class DeletableRvAdapter<VH extends DeletableVh, T> extends Recy
         Handler handler = new Handler(); // hanlder for running delayed runnables
         Runnable runnable = () -> remove(position);
         handler.postDelayed(runnable, PENDING_REMOVAL_TIMEOUT);
-        pengingSubscriptions.put(item, new Subscription(handler, runnable));
+        pengingSubscriptions.put(item, new Subscription(handler, runnable, position));
 
         // this will redraw row in "undo" state
         notifyItemChanged(position);
@@ -124,10 +120,12 @@ public abstract class DeletableRvAdapter<VH extends DeletableVh, T> extends Recy
     private class Subscription {
         private final Handler handler;
         private final Runnable runnable;
+        private int position;
 
-        Subscription(Handler handler, Runnable runnable) {
+        Subscription(Handler handler, Runnable runnable, int position) {
             this.handler = handler;
             this.runnable = runnable;
+            this.position = position;
         }
 
         public Handler getHandler() {
@@ -140,6 +138,10 @@ public abstract class DeletableRvAdapter<VH extends DeletableVh, T> extends Recy
 
         public void removeCallbacks() {
             handler.removeCallbacks(runnable);
+        }
+
+        public int getPosition() {
+            return position;
         }
     }
 }
