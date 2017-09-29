@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
      */
     List<String> retrieveDataStore() {
         List<String> list = new ArrayList<>();
-        List<String> items = Arrays.asList("blal", "blal", "blal", "blal", "blal", "blal", "blal", "blal", "blal", "blal", "blal", "blal");
+        List<String> items = Arrays.asList("Sample item 1", "Sample Item 2", "Bla 3");
         list.addAll(items);
         return list;
     }

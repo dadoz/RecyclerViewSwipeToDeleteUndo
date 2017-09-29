@@ -21,7 +21,6 @@ import static application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter
 public abstract class DeletableRvAdapter<VH extends DeletableVh, T> extends RecyclerView.Adapter<VH> {
     private static final int PENDING_REMOVAL_TIMEOUT = 3000; // 3sec TODO move to config
     private HashMap<T, Subscription> pengingSubscriptions = new HashMap<>(); // map of items to pending runnables, so we can cancel a removal if need be
-    private List<T> itemsPendingRemoval = new ArrayList<>();//deleted item in pending queue
     private List<T> items = new ArrayList<>(); //items
 
     protected DeletableRvAdapter(List<T> items) {
@@ -62,8 +61,6 @@ public abstract class DeletableRvAdapter<VH extends DeletableVh, T> extends Recy
         Subscription subscription = pengingSubscriptions.get(item);
         if (subscription != null) {
             subscription.removeCallbacks();
-            //remove item
-            itemsPendingRemoval.remove(item);
             // this will rebind the row in "normal" state
             notifyItemChanged(subscription.getPosition());
             //remove handler
@@ -77,7 +74,6 @@ public abstract class DeletableRvAdapter<VH extends DeletableVh, T> extends Recy
      */
     public void pendingRemoval(int position) {
         final T item = items.get(position);
-        itemsPendingRemoval.add(item);
 
         // let's create, store and post a runnable to remove the item
         Handler handler = new Handler(); // hanlder for running delayed runnables
@@ -95,9 +91,6 @@ public abstract class DeletableRvAdapter<VH extends DeletableVh, T> extends Recy
      */
     public void remove(int position) {
         T item = items.get(position);
-        if (hasDeleteItemInPending(item)) {
-            itemsPendingRemoval.remove(item);
-        }
         if (items.contains(item)) {
             items.remove(position);
             notifyItemRemoved(position);
@@ -114,7 +107,7 @@ public abstract class DeletableRvAdapter<VH extends DeletableVh, T> extends Recy
     }
 
     private boolean hasDeleteItemInPending(T item) {
-        return itemsPendingRemoval.contains(item);
+        return pengingSubscriptions.keySet().contains(item);
     }
 
     private class Subscription {
