@@ -1,7 +1,12 @@
 siteUrl =
 gitUrl = https://github.com/dadoz/RecyclerViewSwipeToDeleteUndo
+
 version = 1.0.0
-groupId = davidelmn.swipetodelete.recyclerview.lib
+groupId = com.davidelmn
+id = swipetodelete.recyclerview
+name = swipetodelete.recyclerview
+
+user = 
+apiKey = 
+
 licenses = ['Apache-2.0'] // or something else
-id = davidelmn.swipetodelete.recyclerview.lib
-name = swipetodeleterecyclerview
