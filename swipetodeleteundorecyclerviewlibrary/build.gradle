@@ -41,11 +41,6 @@ dependencies {
 }
 
 
-group = 'davidelmn.swipetodelete.recyclerview.lib'
-version = '1.0'
-
-
-
 def artifact = new Properties()
 artifact.load(new FileInputStream("deploy.settings"))
 
@@ -53,6 +48,8 @@ task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier = 'sources'
 }
+group = artifact.groupId
+version = artifact.version
 
 artifacts {
     archives sourcesJar
@@ -84,21 +81,21 @@ install {
 }
 
 bintray {
-    user = artifact.bintrayUser
-    key = artifact.bintrayApiKey
+    user = artifact.user
+    key = artifact.apiKey
     configurations = ['archives']
     pkg {
-        repo = 'swipeToDeleteUndoRecyclerViewLIb'
-        name = 'swipeToDeleteUndoRecyclerView'
+        repo = 'swipeToDeleteUndoRecyclerViewLib'
+        name = artifact.id
         userOrg = user
         publish = true
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/dadoz/RecyclerViewSwipeToDeleteUndo'
         version {
-            name = '1.0.0'
+            name = artifact.version
             desc = 'Description bla bla bla'
             released  = new Date()
-            vcsTag = '1.0.0'
+            vcsTag = artifact.version
             attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
         }
     }
