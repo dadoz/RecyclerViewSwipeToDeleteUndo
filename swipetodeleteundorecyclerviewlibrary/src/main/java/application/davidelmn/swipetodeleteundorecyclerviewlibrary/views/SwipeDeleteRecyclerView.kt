@@ -2,11 +2,9 @@ package application.davidelmn.swipetodeleteundorecyclerviewlibrary.views
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.AttributeSet
-
 import application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.callbacks.SimpleTouchHelperCallbacks
-import application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.decoration.SimpleItemDecoration
+import application.davidelmn.swipetodeleteundorecyclerviewlibrary.helper.ItemTouchHelper
 
 /**
  * Created by davide-syn on 9/27/17.
@@ -32,7 +30,5 @@ class SwipeDeleteRecyclerView : RecyclerView {
         //setItemTouchHelper
         ItemTouchHelper(SimpleTouchHelperCallbacks(this, 0, ItemTouchHelper.LEFT))
                 .attachToRecyclerView(this)
-        //set temDocrator
-        addItemDecoration(SimpleItemDecoration())
     }
 }

@@ -3,9 +3,9 @@ package application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.callb
 import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.DeletableRvAdapter
 import application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.getBackgroundColorDrawable
+import application.davidelmn.swipetodeleteundorecyclerviewlibrary.helper.ItemTouchHelper
 
 /**
  * Created by davide-syn on 9/27/17.
@@ -38,13 +38,13 @@ class SimpleTouchHelperCallbacks(private val recyclerView: RecyclerView, dragDir
         if (viewHolder.adapterPosition == -1) {
             return
         }
-        // draw red background
-        var translationX = dX
 
+        var translationX = dX
+        // draw red background
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            if (dX < 0) {
-                translationX = Math.min(-dX, (-viewHolder.itemView.width / 4).toFloat())
-            }
+//            if (dX < 0) {
+//                translationX = Math.min(-dX, (-viewHolder.itemView.width / 4).toFloat())
+//            }
 
             //red background canvass
             val redBck = ColorDrawable().getBackgroundColorDrawable(viewHolder.itemView.context)

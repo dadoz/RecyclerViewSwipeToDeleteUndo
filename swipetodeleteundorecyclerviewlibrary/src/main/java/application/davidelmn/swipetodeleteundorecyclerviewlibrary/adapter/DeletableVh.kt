@@ -30,10 +30,10 @@ open class DeletableVh(view: View) : RecyclerView.ViewHolder(LayoutInflater.from
         if (undoButtonEnabled) {
             undoButton.visibility = View.VISIBLE
             undoButton.setOnClickListener(listener)
-            mainView.x = -400F
+            mainView.visibility = View.GONE
+//            mainView.x = -400F
             return
         }
-
         undoButton.visibility = View.GONE
         undoButton.setOnClickListener(null)
         mainView.x = 0F

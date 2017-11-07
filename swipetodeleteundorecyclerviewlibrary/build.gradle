@@ -34,7 +34,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile "com.android.support:appcompat-v7:$appcompat_version"
-    compile "com.android.support:support-v4:$appcompat_version"
+    compile "com.android.support:support-compat:$appcompat_version"
     compile "com.android.support:recyclerview-v7:$appcompat_version"
     compile "com.android.support:support-annotations:$appcompat_version"
 
