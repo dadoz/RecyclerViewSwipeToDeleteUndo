@@ -13,12 +13,10 @@ import application.davidelmn.swipetodeleteundorecyclerviewlibrary.R
  * Created by davide-syn on 9/27/17.
  */
 open class DeletableVh(view: View) : RecyclerView.ViewHolder(LayoutInflater.from(view.context).inflate(R.layout.row_view, view.rootView as ViewGroup, false)) {
-    val mainView: ViewGroup
-    val undoButton: Button
+    private val mainView: ViewGroup = itemView.findViewById(R.id.mainViewLayoutContainerId)
+    private val undoButton: Button = itemView.findViewById(R.id.undo_button)
 
     init {
-        mainView = itemView.findViewById(R.id.mainViewLayoutContainerId)
-        undoButton = itemView.findViewById(R.id.undo_button)
         mainView.addView(view)
     }
 
@@ -28,9 +26,16 @@ open class DeletableVh(view: View) : RecyclerView.ViewHolder(LayoutInflater.from
      */
     fun setUndoButtonEnabled(listener: View.OnClickListener, undoButtonEnabled: Boolean) {
         Log.e(javaClass.name, if (undoButtonEnabled) "ENABLE" else "NOT")
-        undoButton.visibility = if (undoButtonEnabled) View.VISIBLE else View.GONE
-        undoButton.setOnClickListener(if (undoButtonEnabled) listener else null)
-        mainView.visibility = if (undoButtonEnabled) View.GONE else View.VISIBLE
-        //        mainView.setX(undoButtonEnabled ? -mainView.getWidth()/4 : 0);
+
+        if (undoButtonEnabled) {
+            undoButton.visibility = View.VISIBLE
+            undoButton.setOnClickListener(listener)
+            mainView.x = -400F
+            return
+        }
+
+        undoButton.visibility = View.GONE
+        undoButton.setOnClickListener(null)
+        mainView.x = 0F
     }
 }

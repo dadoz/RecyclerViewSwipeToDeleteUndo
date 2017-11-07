@@ -5,10 +5,11 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Handler
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import application.davidelmn.swipetodeleteundorecyclerviewlibrary.utils.ColorUtils
+import application.davidelmn.swipetodeleteundorecyclerviewlibrary.R
 import java.util.*
 
 /**
@@ -22,7 +23,7 @@ abstract class DeletableRvAdapter<VH : DeletableVh, T>
  */
 protected constructor(val items: List<T>, context: Context) : RecyclerView.Adapter<VH>() {
     private val pengingSubscriptions = HashMap<T, Subscription>() // map of items to pending runnables, so we can cancel a removal if need be
-    private val redColor: Drawable = ColorUtils.getBackgroundColorDrawable(context)
+    private val redColor: Drawable = ColorDrawable().getBackgroundColorDrawable(context)
     private val whiteColor: Drawable = ColorDrawable(Color.WHITE)
 
     abstract override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH
@@ -39,7 +40,6 @@ protected constructor(val items: List<T>, context: Context) : RecyclerView.Adapt
     override fun getItemCount(): Int {
         return items.size
     }
-
 
     /**
      * @param item
@@ -104,7 +104,17 @@ protected constructor(val items: List<T>, context: Context) : RecyclerView.Adapt
         }
     }
 
+
     companion object {
         private val PENDING_REMOVAL_TIMEOUT = 3000 // 3sec TODO move to config
     }
+
+
 }
+
+/**
+ * move to extension
+ *
+ */
+fun ColorDrawable.getBackgroundColorDrawable(context: Context): Drawable  = ColorDrawable(ContextCompat
+        .getColor(context, R.color.md_amber_400))

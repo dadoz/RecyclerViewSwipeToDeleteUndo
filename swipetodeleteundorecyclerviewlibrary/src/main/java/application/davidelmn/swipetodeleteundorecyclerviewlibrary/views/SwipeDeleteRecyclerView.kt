@@ -28,7 +28,7 @@ class SwipeDeleteRecyclerView : RecyclerView {
     /**
      * init recycler view
      */
-    internal fun init() {
+    private fun init() {
         //setItemTouchHelper
         ItemTouchHelper(SimpleTouchHelperCallbacks(this, 0, ItemTouchHelper.LEFT))
                 .attachToRecyclerView(this)

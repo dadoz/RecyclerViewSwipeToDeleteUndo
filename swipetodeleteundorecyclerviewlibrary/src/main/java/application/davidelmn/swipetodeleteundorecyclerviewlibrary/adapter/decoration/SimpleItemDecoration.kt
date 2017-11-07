@@ -1,11 +1,11 @@
 package application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.decoration
 
 import android.graphics.Canvas
-import android.graphics.drawable.Drawable
+import android.graphics.drawable.ColorDrawable
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.getBackgroundColorDrawable
 
-import application.davidelmn.swipetodeleteundorecyclerviewlibrary.utils.ColorUtils
 
 /**
  * Created by davide-syn on 9/27/17.
@@ -65,7 +65,7 @@ class SimpleItemDecoration : RecyclerView.ItemDecoration() {
                 bottom = firstViewComingUp.top + firstViewComingUp.translationY.toInt()
             }
 
-            val background = ColorUtils.getBackgroundColorDrawable(parent.context)
+            val background = ColorDrawable().getBackgroundColorDrawable(parent.context)
             background.setBounds(left, top, right, bottom)
             background.draw(c)
 
@@ -74,3 +74,4 @@ class SimpleItemDecoration : RecyclerView.ItemDecoration() {
     }
 
 }
+

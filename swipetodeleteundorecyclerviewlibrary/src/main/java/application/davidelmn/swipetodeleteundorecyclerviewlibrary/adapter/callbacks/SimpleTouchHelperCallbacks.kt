@@ -1,12 +1,11 @@
 package application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.callbacks
 
 import android.graphics.Canvas
-import android.graphics.drawable.Drawable
+import android.graphics.drawable.ColorDrawable
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-
 import application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.DeletableRvAdapter
-import application.davidelmn.swipetodeleteundorecyclerviewlibrary.utils.ColorUtils
+import application.davidelmn.swipetodeleteundorecyclerviewlibrary.adapter.getBackgroundColorDrawable
 
 /**
  * Created by davide-syn on 9/27/17.
@@ -34,7 +33,7 @@ class SimpleTouchHelperCallbacks(private val recyclerView: RecyclerView, dragDir
         (recyclerView.adapter as DeletableRvAdapter<*, *>).pendingRemoval(viewHolder.adapterPosition)
     }
 
-    override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+    override fun onChildDraw(canvas: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
                              dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         if (viewHolder.adapterPosition == -1) {
             return
@@ -48,17 +47,17 @@ class SimpleTouchHelperCallbacks(private val recyclerView: RecyclerView, dragDir
             }
 
             //red background canvass
-            val redBck = ColorUtils.getBackgroundColorDrawable(viewHolder.itemView.context)
+            val redBck = ColorDrawable().getBackgroundColorDrawable(viewHolder.itemView.context)
             redBck.setBounds(viewHolder.itemView.right + dX.toInt(), viewHolder.itemView.top,
                     viewHolder.itemView.right, viewHolder.itemView.bottom)
-            redBck.draw(c)
+            redBck.draw(canvas)
+
             //white background canvass
             //            Drawable whiteBck = new ColorDrawable(Color.WHITE);
             //            whiteBck.setBounds(viewHolder.itemView.getRight() -viewHolder.itemView.getRight()/4, viewHolder.itemView.getTop(),
             //                    viewHolder.itemView.getLeft(), viewHolder.itemView.getBottom());
             //            whiteBck.draw(c);
         }
-        super.onChildDraw(c, recyclerView, viewHolder, translationX, dY, actionState, isCurrentlyActive)
+        super.onChildDraw(canvas, recyclerView, viewHolder, translationX, dY, actionState, isCurrentlyActive)
     }
-
 }
